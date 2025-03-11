@@ -1,1 +1,44 @@
+--/*
+--Covid 19 Data Exploration 
 
+--Skills used: Joins, CTE's, Temp Tables, Windows Functions, Aggregate Functions, Creating Views, Converting Data Types
+
+--*/
+
+--Select *
+--From PortfolioProject..CovidDeaths
+--Where continent is not null 
+--order by 3,4
+
+
+---- Select Data that we are going to be starting with
+
+--Select country, date, total_cases, new_cases, total_deaths, population
+--From PortfolioProject..CovidDeaths
+--Where continent is not null 
+--order by 1,2
+
+
+---- Total Cases vs Total Deaths
+---- Shows likelihood of dying if you contract covid in your country
+
+--SELECT 
+--    country, 
+--    date, 
+--    total_cases, 
+--    total_deaths, 
+--    (CAST(total_deaths AS FLOAT) / NULLIF(total_cases, 0)) * 100 AS DeathPercentage
+--FROM PortfolioProject..CovidDeaths
+--WHERE country LIKE '%INDIA%'
+--AND continent IS NOT NULL 
+--ORDER BY 1, 2;
+
+
+
+---- Total Cases vs Population
+---- Shows what percentage of population infected with Covid
+
+--Select country, date, population, total_cases,  (total_cases/population)*100 as PercentPopulationInfected
+--From PortfolioProject..CovidDeaths
+--Where country like '%states%'
+--order by 1,2
