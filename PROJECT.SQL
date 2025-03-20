@@ -113,8 +113,7 @@ SELECT
     SUM(CONVERT(BIGINT, vac.new_vaccinations)) 
         OVER (PARTITION BY dea.country ORDER BY dea.country, dea.date) 
         AS RollingPeopleVaccinated
-    -- Uncomment the line below to calculate the percentage of population vaccinated
-    -- , (RollingPeopleVaccinated / population) * 100 AS VaccinationRate
+    (RollingPeopleVaccinated / population) * 100 AS VaccinationRate
 FROM PortfolioProject..CovidDeaths dea
 JOIN PortfolioProject..CovidVaccines vac
     ON dea.country = vac.country
