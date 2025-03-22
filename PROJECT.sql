@@ -146,3 +146,48 @@ FROM PortfolioProject..CovidDeaths
 WHERE continent IS NOT NULL
 GROUP BY continent
 ORDER BY TotalDeathCount DESC;
+
+SELECT date,country,total_cases,total_deaths,CAST(total_deaths AS FLOAT)/NULLIF(total_cases,0) AS death_percentage
+FROM CovidDeaths
+WHERE continent IS NOT NULL
+
+SELECT date,SUM(new_cases) AS globalcasesperday,SUM(new_deaths) AS globaldeathssperday --total_cases,total_deaths,CAST(total_deaths AS FLOAT)/NULLIF(total_cases,0) AS death_percentage
+FROM CovidDeaths
+WHERE continent IS NOT NULL
+GROUP BY date
+ORDER BY 1,2
+    
+SELECT 
+    country,
+    MAX(total_cases) AS highest_infection_count,
+    MAX(total_deaths) AS total_death_count,
+    (MAX(CAST(total_deaths AS FLOAT)) / NULLIF(MAX(total_cases), 0)) * 100 AS death_percentage
+FROM CovidDeaths
+WHERE continent IS NOT NULL
+GROUP BY country
+ORDER BY death_percentage DESC;
+
+
+SELECT date,SUM(new_cases) AS globalcasesperday,SUM(new_deaths)  AS globaldeathssperday,CAST(NULLIF(SUM(new_deaths),0)AS FLOAT)/NULLIF(SUM(new_cases),0)*100   --total_cases,total_deaths,CAST(total_deaths AS FLOAT)/NULLIF(total_cases,0) AS death_percentage
+FROM CovidDeaths
+WHERE continent IS NOT NULL
+GROUP BY date
+ORDER BY 1,2
+
+
+SELECT 
+    dea.country, 
+    dea.population, 
+    MAX(dea.total_cases) AS InfectionCount,
+    MAX(dea.total_deaths) AS DeathCount, 
+    MAX(CAST(dea.total_cases AS FLOAT) / NULLIF(dea.population, 0)) * 100 AS PercentPopulationInfected,
+    MAX(CAST(dea.total_deaths AS FLOAT) / NULLIF(dea.total_cases, 0)) * 100 AS DeathRate,
+    MAX(vac.diabetes_prevalence) AS DiabetesPrevalence
+FROM PortfolioProject..CovidDeaths dea
+JOIN PortfolioProject..CovidVaccines vac
+    ON dea.country = vac.country
+    AND dea.date = vac.date
+WHERE dea.continent IS NOT NULL  
+GROUP BY dea.country, dea.population
+ORDER BY DiabetesPrevalence DESC;
+
