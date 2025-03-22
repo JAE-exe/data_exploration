@@ -191,3 +191,19 @@ WHERE dea.continent IS NOT NULL
 GROUP BY dea.country, dea.population
 ORDER BY DiabetesPrevalence DESC;
 
+SELECT 
+    dea.country,
+    MAX(CAST(dea.total_cases AS FLOAT)) AS TotalCases,
+    MAX(CAST(dea.total_deaths AS FLOAT)) AS TotalDeaths,
+    (MAX(CAST(dea.total_deaths AS FLOAT)) / NULLIF(MAX(CAST(total_cases AS FLOAT)), 0)) * 100 AS DeathRate,
+	MAX(vac.hospital_beds_per_thousand) AS HBPT,
+	MAX(vac.handwashing_facilities) AS HandwashingAvailability
+FROM CovidDeaths dea
+JOIN CovidVaccines vac
+	ON dea.country = vac.country
+	AND dea.date = vac.date
+WHERE dea.continent IS NOT NULL
+GROUP BY dea.country
+ORDER BY DeathRate DESC  ;
+
+
